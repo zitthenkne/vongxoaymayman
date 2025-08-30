@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trình Tạo Vòng Quay Tùy Chỉnh</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/2917/2917993.png">
+</head>
+<body>
+
+    <div class="container">
+        <div class="logo-wrap">
+            <img src="logo.png" alt="Logo câu lạc bộ">
+        </div>
+        <h1 id="main-title">Trình Tạo Vòng Quay Tùy Chỉnh</h1>
+        <p class="desc">Nhập các lựa chọn, tạo vòng quay và thử vận may của bạn! Có thể bật chế độ loại trừ để không trùng kết quả.</p>
+        <div class="setup-panel">
+            <h3>Nhập các lựa chọn (mỗi lựa chọn một dòng)</h3>
+            <textarea id="options-input" rows="10" placeholder="Ví dụ:&#10;Ăn gì hôm nay?&#10;Xem phim gì?&#10;Chơi game gì?"></textarea>
+            <div class="controls">
+                <div class="checkbox-container">
+                    <input type="checkbox" id="elimination-mode">
+                    <label for="elimination-mode">Bật Chế độ Loại trừ (Xóa lựa chọn sau khi trúng)</label>
+                </div>
+                <div class="button-group">
+                    <button id="create-wheel-btn">Tạo Vòng quay</button>
+                    <button id="clear-all-btn">Xóa tất cả</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="interaction-panel">
+            <div class="wheel-container">
+                <div id="arrow-indicator"></div>
+                <canvas id="spinner-canvas" width="400" height="400"></canvas>
+                <button id="spin-btn"><span class="spin-label">QUAY!</span></button>
+            </div>
+            <div id="hit-list-container">
+                <h3>Danh sách đã trúng:</h3>
+                <ul id="hit-list"></ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="result-popup" class="popup-overlay hidden">
+        <div class="popup-content">
+            <h2>Kết quả là...</h2>
+            <p id="result-text"></p>
+            <div class="popup-buttons">
+                <button id="delete-spin-btn">Xóa & Quay Tiếp</button>
+                <button id="go-back-btn">Quay Lại</button>
+                <button id="create-new-btn">Tạo Mới</button>
+                <button id="share-result-btn" style="background:#17a2b8;color:white;">Chia sẻ kết quả</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+    // Hiệu ứng động cho tiêu đề
+    document.addEventListener('DOMContentLoaded', function() {
+        const title = document.getElementById('main-title');
+        setInterval(() => {
+            title.style.color = title.style.color === '#007bff' ? '#FF6347' : '#007bff';
+        }, 1200);
+    });
+    // Chia sẻ kết quả
+    document.getElementById('share-result-btn').onclick = function() {
+        const text = document.getElementById('result-text').textContent;
+        if (navigator.share) {
+            navigator.share({
+                title: 'Kết quả vòng quay',
+                text: `Kết quả là: ${text}`,
+                url: window.location.href
+            });
+        } else {
+            alert('Trình duyệt của bạn không hỗ trợ chia sẻ trực tiếp.');
+        }
+    };
+    </script>
+    <footer class="page-footer">
+        © zitthenk - Y23 - PRIT
+    </footer>
+</body>
+</html>

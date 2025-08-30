@@ -1,0 +1,193 @@
+/* Variables for theme */
+:root{
+    --bg-1: #eef2f7;
+    --bg-2: #f7fbff;
+    --card: #ffffff;
+    --muted: #6b7280;
+    --primary: #2563eb; /* blue-600 */
+    --primary-700: #1d4ed8;
+    --accent: #ff6b4a;
+    --success: #16a34a;
+    --danger: #dc2626;
+    --glass: rgba(255,255,255,0.6);
+}
+
+/* Base layout */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+body{
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    background: linear-gradient(180deg,var(--bg-1),var(--bg-2));
+    color: #0f172a;
+    display: flex;
+    flex-direction: column; /* Sắp xếp các mục theo chiều dọc */
+    align-items: center; /* Căn giữa các mục theo chiều ngang */
+    padding:32px;
+    min-height:100dvh; /* Use dvh for better mobile viewport height handling */
+    margin:0;
+}
+
+.container{
+    width:100%;
+    max-width:980px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.9), var(--card));
+    border-radius:14px;
+    box-shadow: 0 10px 30px rgba(17,24,39,0.08);
+    padding:28px;
+    text-align:center;
+    border: 1px solid rgba(16,24,40,0.04);
+    flex: 1; /* Cho phép container co giãn để đẩy footer xuống dưới */
+}
+
+.container > .logo-wrap img{height:64px;max-width:140px;object-fit:contain}
+
+.desc{color:var(--muted);margin-bottom:12px}
+
+/* Use ID selector directly for better performance and simplicity */
+#main-title{
+    font-size: clamp(20px, 1.67vw + 13px, 28px); /* Fluid typography for smooth scaling */
+    margin:12px 0 8px;
+    font-weight:700;
+    background: linear-gradient(90deg,var(--primary),var(--accent));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+}
+
+/* This selector is fragile. Consider adding a class to the <p> tag in HTML. */
+p[style]{
+    margin:0 0 16px;
+    color:var(--muted);
+}
+
+/* Setup panel */
+.setup-panel{
+    margin-bottom:22px;
+    padding:18px;
+    border-radius:10px;
+    background: linear-gradient(180deg, rgba(245,247,250,0.7), rgba(255,255,255,0.6));
+    border:1px solid rgba(15,23,42,0.04);
+    text-align:left;
+}
+
+.setup-panel h3{margin:0 0 10px;font-size:16px;color:#0b1220}
+
+/* Use ID selector directly */
+#options-input{
+    width:100%;
+    min-height:140px;
+    padding:12px 14px;
+    border-radius:10px;
+    border:1px solid rgba(15,23,42,0.06);
+    box-shadow: inset 0 1px 3px rgba(2,6,23,0.03);
+    font-size:15px;
+    resize:vertical;
+    color: #0b1220;
+}
+
+.controls{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap}
+.checkbox-container{display:flex;align-items:center;gap:10px;color:var(--muted)}
+
+.button-group{display:flex;gap:10px}
+
+/* Buttons */
+button{cursor:pointer;border:0;padding:10px 16px;border-radius:10px;font-weight:600;transition:all 180ms ease;box-shadow:0 6px 18px rgba(16,24,40,0.06)}
+/* Removed generic active transform to avoid affecting all buttons (e.g., spin button). */
+/* Effects are now applied to specific buttons. */
+
+#create-wheel-btn{background:linear-gradient(90deg,var(--success),#10b981);color:white}
+#create-wheel-btn:hover{filter:brightness(1.05)}
+#create-wheel-btn:active{transform: translateY(1px); filter: brightness(0.95);}
+
+#clear-all-btn{background:linear-gradient(90deg,#ef4444,var(--danger));color:white}
+#clear-all-btn:hover{filter:brightness(1.05)}
+#clear-all-btn:active{transform: translateY(1px); filter: brightness(0.95);}
+#share-result-btn{background:linear-gradient(90deg,var(--primary),var(--primary-700));color:white;padding:8px 12px;border-radius:8px}
+
+/* Interaction layout */
+.interaction-panel{display:flex;gap:28px;align-items:flex-start;justify-content:center;flex-wrap:wrap}
+.wheel-container{position:relative;width:420px;height:420px;border-radius:14px;display:flex;align-items:center;justify-content:center}
+
+#spinner-canvas{width:100%;height:100%;border-radius:50%;box-shadow: 0 12px 30px rgba(15,23,42,0.08);transition:transform 4s cubic-bezier(.22,.9,.33,1)}
+
+/* Arrow indicator (overrides inline if needed) */
+#arrow-indicator{position:absolute;left:50%;top:-30px;transform:translateX(-50%);z-index:4;width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-top:28px solid var(--accent)}
+
+/* Spin button centered on wheel */
+#spin-btn{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate3d(-50%,-50%,0); /* Use 3d transform for hardware acceleration */
+    will-change:transform; /* Hint browser for transform animation */
+    width:96px;
+    height:96px;
+    border-radius:50%;
+    background:linear-gradient(180deg,var(--primary),var(--primary-700));
+    color:white;
+    border:6px solid rgba(255,255,255,0.9);
+    font-size:18px;
+    font-weight:800;
+    display:flex;align-items:center;justify-content:center;line-height:1;
+    text-rendering:optimizeLegibility;box-shadow:0 12px 30px rgba(37,99,235,0.18);overflow:visible
+}
+/* Visual scale/transform is applied to the inner label to avoid shifting the button's position */
+#spin-btn .spin-label{display:inline-block;transition:transform 150ms ease;transform-origin:center center}
+#spin-btn:hover .spin-label{transform:scale(1.04)}
+#spin-btn:active .spin-label{transform:translateY(1px) scale(.99)}
+
+/* Hit list */
+#hit-list-container{flex-basis:260px;text-align:left;padding:16px;border-radius:10px;background:var(--glass);backdrop-filter: blur(6px);border:1px solid rgba(16,24,40,0.04)}
+#hit-list{list-style:none;padding:0;margin:8px 0 0}
+#hit-list li{background:linear-gradient(90deg,#f8fafc,#f1f5f9);padding:10px;border-radius:8px;margin-bottom:8px;color:#0b1220}
+
+/* Popup */
+.popup-overlay{position:fixed;inset:0;background:rgba(2,6,23,0.5);display:flex;align-items:center;justify-content:center;padding:20px}
+.popup-content{background:white;padding:28px;border-radius:12px;box-shadow:0 20px 50px rgba(2,6,23,0.3);text-align:center}
+#result-text{font-size:22px;font-weight:700;color:var(--primary);margin:14px 0}
+.popup-buttons{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+
+.hidden{display:none !important}
+
+/* Footer */
+.page-footer {
+    margin-top: 32px;
+    padding-bottom: 16px; /* Thêm khoảng đệm dưới để không bị dính sát màn hình */
+    font-size: 14px;
+    color: var(--muted);
+}
+
+/* Responsive tweaks */
+@media (max-width:900px){
+    body{padding:24px 18px}
+    .container{padding:18px}
+    .logo-wrap img{height:56px;max-width:110px}
+    /* #main-title font-size is now fluid, no need to change it here */
+    .setup-panel{padding:14px}
+    #options-input{min-height:110px}
+    .controls{flex-direction:column;align-items:stretch;gap:10px}
+    .button-group{width:100%;display:flex;gap:10px}
+    .button-group button{flex:1;padding:12px;border-radius:10px}
+    .interaction-panel{flex-direction:column;align-items:center}
+    #hit-list-container{width:100%}
+    .wheel-container{width:320px;height:320px}
+    #spin-btn{width:80px;height:80px}
+    #arrow-indicator{top:-22px;border-left:14px solid transparent;border-right:14px solid transparent;border-top:22px solid var(--accent)}
+}
+
+@media (max-width:420px){
+    body{padding:16px 12px}
+    .popup-content{padding: 24px 18px;}
+    #result-text{font-size: 20px;}
+    .container{padding:16px}
+    /* Tối ưu vòng quay cho màn hình nhỏ */
+    .wheel-container{
+        width: 100%; /* Tự động co giãn theo chiều rộng container */
+        max-width: 280px; /* Nhưng không lớn hơn 280px */
+        height: auto; /* Chiều cao tự động theo tỉ lệ */
+        aspect-ratio: 1 / 1; /* Giữ hình dạng vuông */
+    }
+    #spin-btn{width:72px;height:72px;font-size:16px}
+    #options-input{min-height:90px}
+    /* #main-title font-size is now fluid, no need to change it here */
+    .button-group button{padding:10px;font-size:15px}
+}
